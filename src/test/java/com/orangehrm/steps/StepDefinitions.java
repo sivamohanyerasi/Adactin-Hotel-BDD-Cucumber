@@ -1,13 +1,16 @@
 package com.orangehrm.steps;
 
+import java.time.Duration;
 import java.util.List;
 
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.Select;
 
 import com.orangehrm.exceptions.FrameworkException;
 
@@ -115,6 +118,59 @@ public void user_enters_details_in_registration_form(DataTable dataTable) {
 	driver.findElement(By.xpath("//input[@name='email_add']")).sendKeys(allList.get(0).get(4));
 	driver.findElement(By.xpath("//input[@name='captcha']")).sendKeys(allList.get(0).get(5));
 	
+}
+
+@Given("User is logged into the Adactin application with valid credentials")
+public void user_is_logged_into_the_adactin_application_with_valid_credentials() {
+    driver= new ChromeDriver();
+    driver.get("https://adactinhotelapp.com/");
+    driver.manage().window().maximize();
+    driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
+    driver.findElement(By.xpath("//input[@name='username']")).sendKeys("reyaz0806");
+    driver.findElement(By.xpath("//input[@name='password']")).sendKeys("reyaz123");
+    driver.findElement(By.xpath("//input[@name='login']")).click();
+}
+@Given("User is on the {string} page")
+public void user_is_on_the_page(String string) {
+    Assert.assertEquals(driver.getTitle(), "Adactin.com - Search Hotel");
+}
+@When("User selects Location as {string}")
+public void user_selects_location_as(String string) {
+    driver.findElement(By.name("location")).sendKeys("Sydney");
+}
+@When("User selects Hotel as {string}")
+public void user_selects_hotel_as(String string) {
+	    driver.findElement(By.id("hotels")).sendKeys("Hotel Creek");
+}
+@When("User selects Room Type as {string}")
+public void user_selects_room_type_as(String string) {
+	driver.findElement(By.id("room_type")).sendKeys("Standard");
+}
+@When("User selects Number of Rooms as {string}")
+public void user_selects_number_of_rooms_as(String string) {
+	WebElement ele= driver.findElement(By.id("room_nos"));
+	Select select = new Select(ele);
+	select.selectByVisibleText("1 - One");
+}
+@When("User enters Check-In Date as {string}")
+public void user_enters_check_in_date_as(String string) {
+	driver.findElement(By.id("datepick_in")).sendKeys("11/12/2025");
+}
+@When("User enters Check-Out Date as {string}")
+public void user_enters_check_out_date_as(String string) {
+	driver.findElement(By.xpath("//input[@name='datepick_out']")).sendKeys("13/12/2025");
+}
+@When("User clicks the Search button")
+public void user_clicks_the_search_button() {
+	driver.findElement(By.id("Submit")).click();
+}
+@Then("The application should display an error message")
+//Check-In Date should be either Today or Later Date
+public void the_application_should_display_an_error_message() {
+	WebElement ele=driver.findElement(By.xpath("//span[text()='Check-In Date should be either Today or Later Date']"));
+	String expectedErrorMessage="Check-In Date should be either Today or Later Date";
+	String actualErrorMessage= ele.getText();
+    Assert.assertEquals("Error message is not showing",expectedErrorMessage, actualErrorMessage);
 }
 
 
