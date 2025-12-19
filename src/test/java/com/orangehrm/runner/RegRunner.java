@@ -7,10 +7,10 @@ import io.cucumber.junit.CucumberOptions;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(
-		features="src/test/resources/features/regression/ValidatePastDateIsNotWorking.feature",
+		features="src/test/resources/features/regression",
 		glue="com.orangehrm.steps",
-		dryRun=false,
-		tags="@TC-103")
+		dryRun=true,
+		tags="@TC-104")
 public class RegRunner {
 
 }
